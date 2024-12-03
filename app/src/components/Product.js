@@ -2,32 +2,38 @@ import "../assets/CSS/layout.css";
 import { useState } from "react";
 
 export default function Product({ flowersdata, cartitems }) {
-  const [quantities, setqty] = useState({});
+  const [quantities, setQuantities] = useState({});
 
-  const handlechange = (e, id) => {
+  // Update quantity for the respective flower
+  const handleQuantityChange = (e, name) => {
     const value = parseInt(e.target.value, 10) || 0;
-    setqty((prev) => ({ ...prev, [id]: value }));
+    setQuantities((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (
     <>
       {flowersdata.map((data) => (
-        <div className="grid-item" id={data.id}>
-          <div class="card">
-            <img src={require("../assets/image/" + data.img)} alt={data.name} />
-            <div class="card-body">
-              <h5 class="card-title">Price:{data.price}</h5>
-              <div class="quantity-container">
-                <label for="quantity">Quantity:{data.qty}</label>
+        <div className="grid-item" key={data.id}>
+          <div className="card">
+            <img src={require(`../assets/image/${data.img}`)} alt={data.name} />
+            <div className="card-body">
+              <h5 className="card-title">
+                {data.name} - {data.price}
+              </h5>
+              <div className="quantity-container">
+                <label>Quantity:</label>
                 <input
                   type="number"
-                  id="quantity"
-                  name="quantity"
-                  onChange={(e) => handlechange(e, data.id)}
+                  id={`quantity-${data.id}`}
+                  value={quantities[data.id] || ""}
+                  onChange={(e) => handleQuantityChange(e, data.id)}
                 />
               </div>
               <button
-                class="card-button"
+                className="card-button"
                 onClick={() => cartitems(data, quantities[data.id] || 0)}
               >
                 Add to Cart
