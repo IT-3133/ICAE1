@@ -2,8 +2,24 @@ import "../assets/CSS/layout.css";
 import Product from "./Product";
 import { flowers } from "./FlowerDB";
 import Cart from "./Cart";
+import { useState } from "react";
 
 export default function Products() {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addToCart = (flower, quantity) => {
+    if (quantity > 0) {
+      setCartItems((prev) => {
+        const existing = prev.find((item) => item.id === flower.id);
+        if (existing) {
+          return prev.map((item) =>
+            item.id === flower.id ? { ...item, qty: item.qty + quantity } : item
+          );
+        }
+        return [...prev, { ...flower, qty: quantity }];
+      });
+    }
+  };
   return (
     <>
       <div className="item1">
@@ -14,14 +30,14 @@ export default function Products() {
         <div className="grid-container">
           {
             //product
-            <Product flowersdata={flowers}></Product>
+            <Product flowersdata={flowers} cartitems={addToCart}></Product>
           }
         </div>
       </div>
       <div className="item3">
         {
           //cart
-          <Cart></Cart>
+          <Cart cartItems={cartItems}></Cart>
         }
       </div>
     </>
